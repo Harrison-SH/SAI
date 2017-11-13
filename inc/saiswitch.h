@@ -1339,14 +1339,6 @@ typedef enum _sai_switch_attr_t
     SAI_SWITCH_ATTR_PFC_TC_DLR_INTERVAL,
 
     /**
-     * @brief End of attributes
-     */
-    SAI_SWITCH_ATTR_END,
-
-    /** Custom range base value */
-    SAI_SWITCH_ATTR_CUSTOM_RANGE_START = 0x10000000,
-
-    /**
      * @brief DTEL INT endpoint
      *
      * @type bool
