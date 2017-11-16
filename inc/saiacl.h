@@ -1874,6 +1874,7 @@ typedef enum _sai_acl_entry_attr_t
      *
      * @type sai_acl_field_data_t sai_uint16_t
      * @flags CREATE_AND_SET
+     * @isvlan false
      */
     SAI_ACL_ENTRY_ATTR_FIELD_INNER_ETHER_TYPE,
 
@@ -1890,6 +1891,7 @@ typedef enum _sai_acl_entry_attr_t
      *
      * @type sai_acl_field_data_t sai_uint16_t
      * @flags CREATE_AND_SET
+     * @isvlan false
      */
     SAI_ACL_ENTRY_ATTR_FIELD_INNER_L4_SRC_PORT,
 
@@ -1898,6 +1900,7 @@ typedef enum _sai_acl_entry_attr_t
      *
      * @type sai_acl_field_data_t sai_uint16_t
      * @flags CREATE_AND_SET
+     * @isvlan false
      */
     SAI_ACL_ENTRY_ATTR_FIELD_INNER_L4_DST_PORT,
 
@@ -1908,7 +1911,7 @@ typedef enum _sai_acl_entry_attr_t
      * @flags CREATE_AND_SET
      * @default SAI_ACL_DTEL_FLOW_OP_NOP
      */
-    SAI_ACL_ENTRY_ATTR_ACTION_DTEL_FLOW_OP,
+    SAI_ACL_ENTRY_ATTR_ACTION_ACL_DTEL_FLOW_OP,
 
     /**
      * @brief INT session ID
@@ -1916,6 +1919,8 @@ typedef enum _sai_acl_entry_attr_t
      * @type sai_object_id_t
      * @flags CREATE_AND_SET
      * @objects SAI_OBJECT_TYPE_DTEL_INT_SESSION
+     * @allownull true
+     * @default SAI_NULL_OBJECT_ID
      */
     SAI_ACL_ENTRY_ATTR_ACTION_DTEL_INT_SESSION,
 
@@ -1924,7 +1929,7 @@ typedef enum _sai_acl_entry_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_ACL_ENTRY_ATTR_ACTION_DTEL_DROP_REPORT_ENABLE,
 
@@ -1942,7 +1947,7 @@ typedef enum _sai_acl_entry_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_ACL_ENTRY_ATTR_ACTION_DTEL_REPORT_ALL_PACKETS,
 

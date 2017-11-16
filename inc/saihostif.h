@@ -316,7 +316,6 @@ typedef enum _sai_hostif_trap_type_t
 
 } sai_hostif_trap_type_t;
 
-
 /**
  * @brief Attribute data for SAI_HOSTIF_ATTR_VLAN_TAG
  */

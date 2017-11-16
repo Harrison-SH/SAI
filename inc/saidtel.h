@@ -19,7 +19,7 @@
  *
  * @file    saidtel.h
  *
- * @brief   This module defines SAI data palen telemetry interface
+ * @brief   This module defines SAI data plane telemetry interface
  */
 
 #if !defined (__SAIDTEL_H_)
@@ -32,20 +32,24 @@
 typedef enum _sai_dtel_queue_report_attr_t
 {
     /**
+     * @brief Start of attributes
+     */
+    SAI_DTEL_QUEUE_REPORT_ATTR_START,
+
+    /**
      * @brief Queue object ID
      *
      * @type sai_object_id_t
      * @flags MANDATORY_ON_CREATE | CREATE_ONLY
      * @objects SAI_OBJECT_TYPE_QUEUE
      */
-    SAI_DTEL_QUEUE_REPORT_ATTR_QUEUE_ID,
+    SAI_DTEL_QUEUE_REPORT_ATTR_QUEUE_ID = SAI_DTEL_QUEUE_REPORT_ATTR_START,
 
     /**
      * @brief Queue depth threshold in byte
      *
      * @type sai_uint32_t
      * @flags CREATE_AND_SET
-     * @default UINT32_MAX
      */
     SAI_DTEL_QUEUE_REPORT_ATTR_DEPTH_THRESHOLD,
 
@@ -54,7 +58,6 @@ typedef enum _sai_dtel_queue_report_attr_t
      *
      * @type sai_uint32_t
      * @flags CREATE_AND_SET
-     * @default UINT32_MAX
      */
     SAI_DTEL_QUEUE_REPORT_ATTR_LATENCY_THRESHOLD,
 
@@ -72,9 +75,24 @@ typedef enum _sai_dtel_queue_report_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_DTEL_QUEUE_REPORT_ATTR_TAIL_DROP,
+
+    /**
+     * @brief End of attributes
+     */
+    SAI_DTEL_QUEUE_REPORT_ATTR_END,
+
+    /**
+     * @brief Custom range base value start
+     */
+    SAI_DTEL_QUEUE_REPORT_ATTR_CUSTOM_RANGE_START = 0x10000000,
+
+    /**
+     * @brief End of Custom range base
+     */
+    SAI_DTEL_QUEUE_REPORT_ATTR_CUSTOM_RANGE_END
 
 } sai_dtel_queue_report_attr_t;
 
@@ -83,6 +101,11 @@ typedef enum _sai_dtel_queue_report_attr_t
  */
 typedef enum _sai_dtel_int_session_attr_t
 {
+    /**
+     * @brief Start of attributes
+     */
+    SAI_DTEL_INT_SESSION_ATTR_START,
+
     /**
      * @brief INT max hop count
      *
@@ -93,14 +116,14 @@ typedef enum _sai_dtel_int_session_attr_t
      * @flags CREATE_AND_SET
      * @default 8
      */
-    SAI_DTEL_INT_SESSION_ATTR_MAX_HOP_COUNT,
+    SAI_DTEL_INT_SESSION_ATTR_MAX_HOP_COUNT = SAI_DTEL_INT_SESSION_ATTR_START,
 
     /**
      * @brief Collect switch ID
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_DTEL_INT_SESSION_ATTR_COLLECT_SWITCH_ID,
 
@@ -109,7 +132,7 @@ typedef enum _sai_dtel_int_session_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_DTEL_INT_SESSION_ATTR_COLLECT_SWITCH_PORTS,
 
@@ -118,7 +141,7 @@ typedef enum _sai_dtel_int_session_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_DTEL_INT_SESSION_ATTR_COLLECT_INGRESS_TIMESTAMP,
 
@@ -127,7 +150,7 @@ typedef enum _sai_dtel_int_session_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_DTEL_INT_SESSION_ATTR_COLLECT_EGRESS_TIMESTAMP,
 
@@ -136,9 +159,24 @@ typedef enum _sai_dtel_int_session_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
-    SAI_DTEL_INT_SESSION_ATTR_COLLECT_QUEUE_INFO
+    SAI_DTEL_INT_SESSION_ATTR_COLLECT_QUEUE_INFO,
+
+    /**
+     * @brief End of attributes
+     */
+    SAI_DTEL_INT_SESSION_ATTR_END,
+
+    /**
+     * @brief Custom range base value start
+     */
+    SAI_DTEL_INT_SESSION_ATTR_CUSTOM_RANGE_START = 0x10000000,
+
+    /**
+     * @brief End of Custom range base
+     */
+    SAI_DTEL_INT_SESSION_ATTR_CUSTOM_RANGE_END
 
 } sai_dtel_int_session_attr_t;
 
@@ -148,12 +186,17 @@ typedef enum _sai_dtel_int_session_attr_t
 typedef enum _sai_dtel_report_session_attr_t
 {
     /**
+     * @brief Start of attributes
+     */
+    SAI_DTEL_REPORT_SESSION_ATTR_START,
+
+    /**
      * @brief Telemetry report source IP address
      *
      * @type sai_ip_address_t
      * @flags CREATE_AND_SET
      */
-    SAI_DTEL_REPORT_SESSION_ATTR_SRC_IP,
+    SAI_DTEL_REPORT_SESSION_ATTR_SRC_IP = SAI_DTEL_REPORT_SESSION_ATTR_START,
 
     /**
      * @brief Telemetry report destination IP addresses
@@ -177,6 +220,7 @@ typedef enum _sai_dtel_report_session_attr_t
      *
      * @type sai_uint16_t
      * @flags CREATE_AND_SET
+     * @isvlan false
      */
     SAI_DTEL_REPORT_SESSION_ATTR_TRUNCATE_SIZE,
 
@@ -185,8 +229,25 @@ typedef enum _sai_dtel_report_session_attr_t
      *
      * @type sai_uint16_t
      * @flags CREATE_AND_SET
+     * @isvlan false
      */
     SAI_DTEL_REPORT_SESSION_ATTR_UDP_DST_PORT,
+
+    /**
+     * @brief End of attributes
+     */
+    SAI_DTEL_REPORT_SESSION_ATTR_END,
+
+    /**
+     * @brief Custom range base value start
+     */
+    SAI_DTEL_REPORT_SESSION_ATTR_CUSTOM_RANGE_START = 0x10000000,
+
+    /**
+     * @brief End of Custom range base
+     */
+    SAI_DTEL_REPORT_SESSION_ATTR_CUSTOM_RANGE_END
+
 } sai_dtel_report_session_attr_t;
 
 /**
@@ -222,12 +283,17 @@ typedef enum _sai_dtel_event_type_t
 typedef enum _sai_dtel_event_attr_t
 {
     /**
+     * @brief Start of attributes
+     */
+    SAI_DTEL_EVENT_ATTR_START,
+
+    /**
      * @brief DTel event type
      *
      * @type sai_dtel_event_type_t
      * @flags MANDATORY_ON_CREATE | CREATE_ONLY
      */
-    SAI_DTEL_EVENT_ATTR_TYPE,
+    SAI_DTEL_EVENT_ATTR_TYPE = SAI_DTEL_EVENT_ATTR_START,
 
     /**
      * @brief DTel report session
@@ -239,82 +305,101 @@ typedef enum _sai_dtel_event_attr_t
     SAI_DTEL_EVENT_ATTR_REPORT_SESSION,
 
     /**
-     * @brief DTel report dscp value
+     * @brief DTel report DSCP value
      *
      * @type sai_uint8_t
      * @flags MANDATORY_ON_CREATE
      */
     SAI_DTEL_EVENT_ATTR_DSCP_VALUE,
 
+    /**
+     * @brief End of attributes
+     */
+    SAI_DTEL_EVENT_ATTR_END,
+
+    /**
+     * @brief Custom range base value start
+     */
+    SAI_DTEL_EVENT_ATTR_CUSTOM_RANGE_START = 0x10000000,
+
+    /**
+     * @brief End of Custom range base
+     */
+    SAI_DTEL_EVENT_ATTR_CUSTOM_RANGE_END
+
 } sai_dtel_event_attr_t;
 
 typedef sai_status_t (*sai_create_dtel_queue_report_fn)(
         _Out_ sai_object_id_t *dtel_queue_report_id,
-        _In_  uint32_t attr_count,
-        _In_  const sai_attribute_t *attr_list);
+        _In_ sai_object_id_t switch_id,
+        _In_ uint32_t attr_count,
+        _In_ const sai_attribute_t *attr_list);
 
 typedef sai_status_t (*sai_remove_dtel_queue_report_fn)(
         _In_ sai_object_id_t dtel_queue_report_id);
 
 typedef sai_status_t (*sai_get_dtel_queue_report_attribute_fn)(
-        _In_    sai_object_id_t dtel_queue_report_id,
-        _In_    uint32_t attr_count,
+        _In_ sai_object_id_t dtel_queue_report_id,
+        _In_ uint32_t attr_count,
         _Inout_ sai_attribute_t *attr_list);
 
 typedef sai_status_t (*sai_set_dtel_queue_report_attribute_fn)(
-        _In_  sai_object_id_t dtel_queue_report_id,
-        _In_  const sai_attribute_t *attr);
+        _In_ sai_object_id_t dtel_queue_report_id,
+        _In_ const sai_attribute_t *attr);
 
 typedef sai_status_t (*sai_create_dtel_int_session_fn)(
         _Out_ sai_object_id_t *dtel_int_session_id,
-        _In_  uint32_t attr_count,
-        _In_  const sai_attribute_t *attr_list);
+        _In_ sai_object_id_t switch_id,
+        _In_ uint32_t attr_count,
+        _In_ const sai_attribute_t *attr_list);
 
 typedef sai_status_t (*sai_remove_dtel_int_session_fn)(
         _In_ sai_object_id_t dtel_int_session_id);
 
 typedef sai_status_t (*sai_get_dtel_int_session_attribute_fn)(
-        _In_    sai_object_id_t dtel_int_session_id,
-        _In_    uint32_t attr_count,
+        _In_ sai_object_id_t dtel_int_session_id,
+        _In_ uint32_t attr_count,
         _Inout_ sai_attribute_t *attr_list);
 
 typedef sai_status_t (*sai_set_dtel_int_session_attribute_fn)(
-        _In_  sai_object_id_t dtel_int_session_id,
-        _In_  const sai_attribute_t *attr);
+        _In_ sai_object_id_t dtel_int_session_id,
+        _In_ const sai_attribute_t *attr);
 
 typedef sai_status_t (*sai_create_dtel_report_session_fn)(
         _Out_ sai_object_id_t *dtel_report_session_id,
-        _In_  uint32_t attr_count,
-        _In_  const sai_attribute_t *attr_list);
+        _In_ sai_object_id_t switch_id,
+        _In_ uint32_t attr_count,
+        _In_ const sai_attribute_t *attr_list);
 
 typedef sai_status_t (*sai_remove_dtel_report_session_fn)(
         _In_ sai_object_id_t dtel_report_session_id);
 
 typedef sai_status_t (*sai_get_dtel_report_session_attribute_fn)(
-        _In_    sai_object_id_t dtel_report_session_id,
-        _In_    uint32_t attr_count,
+        _In_ sai_object_id_t dtel_report_session_id,
+        _In_ uint32_t attr_count,
         _Inout_ sai_attribute_t *attr_list);
 
 typedef sai_status_t (*sai_set_dtel_report_session_attribute_fn)(
-        _In_  sai_object_id_t dtel_report_session_id,
-        _In_  const sai_attribute_t *attr);
+        _In_ sai_object_id_t dtel_report_session_id,
+        _In_ const sai_attribute_t *attr);
 
 typedef sai_status_t (*sai_create_dtel_event_fn)(
         _Out_ sai_object_id_t *dtel_event_id,
-        _In_  uint32_t attr_count,
-        _In_  const sai_attribute_t *attr_list);
+        _In_ sai_object_id_t switch_id,
+        _In_ uint32_t attr_count,
+        _In_ const sai_attribute_t *attr_list);
 
 typedef sai_status_t (*sai_remove_dtel_event_fn)(
         _In_ sai_object_id_t dtel_event_id);
 
 typedef sai_status_t (*sai_get_dtel_event_attribute_fn)(
-        _In_    sai_object_id_t dtel_event_id,
-        _In_    uint32_t attr_count,
+        _In_ sai_object_id_t dtel_event_id,
+        _In_ uint32_t attr_count,
         _Inout_ sai_attribute_t *attr_list);
 
 typedef sai_status_t (*sai_set_dtel_event_attribute_fn)(
-        _In_  sai_object_id_t dtel_event_id,
-        _In_  const sai_attribute_t *attr);
+        _In_ sai_object_id_t dtel_event_id,
+        _In_ const sai_attribute_t *attr);
 
 typedef struct _sai_dtel_api_t
 {

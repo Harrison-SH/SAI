@@ -1339,19 +1339,11 @@ typedef enum _sai_switch_attr_t
     SAI_SWITCH_ATTR_PFC_TC_DLR_INTERVAL,
 
     /**
-     * @brief End of attributes
-     */
-    SAI_SWITCH_ATTR_END,
-
-    /** Custom range base value */
-    SAI_SWITCH_ATTR_CUSTOM_RANGE_START = 0x10000000,
-
-    /**
      * @brief DTEL INT endpoint
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_SWITCH_ATTR_DTEL_INT_ENDPOINT_ENABLE,
 
@@ -1360,7 +1352,7 @@ typedef enum _sai_switch_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_SWITCH_ATTR_DTEL_INT_TRANSIT_ENABLE,
 
@@ -1369,7 +1361,7 @@ typedef enum _sai_switch_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_SWITCH_ATTR_DTEL_POSTCARD_ENABLE,
 
@@ -1378,7 +1370,7 @@ typedef enum _sai_switch_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_SWITCH_ATTR_DTEL_DROP_REPORT_ENABLE,
 
@@ -1387,7 +1379,7 @@ typedef enum _sai_switch_attr_t
      *
      * @type bool
      * @flags CREATE_AND_SET
-     * @default False
+     * @default false
      */
     SAI_SWITCH_ATTR_DTEL_QUEUE_REPORT_ENABLE,
 
@@ -1404,6 +1396,7 @@ typedef enum _sai_switch_attr_t
      *
      * @type sai_uint16_t
      * @flags CREATE_AND_SET
+     * @isvlan false
      * @default 0
      */
     SAI_SWITCH_ATTR_DTEL_FLOW_STATE_CLEAR_CYCLE,

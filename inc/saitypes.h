@@ -298,7 +298,7 @@ typedef struct _sai_ip_address_t {
     } addr;
 } sai_ip_address_t;
 
-typedef struct  _sai_ip_address_list_t {
+typedef struct _sai_ip_address_list_t {
     uint32_t count;
     sai_ip_address_t *list;
 } sai_ip_address_list_t;

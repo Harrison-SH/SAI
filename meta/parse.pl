@@ -232,6 +232,9 @@ sai_acl_action_data_t   aclaction
 sai_qos_map_list_t      qosmap
 sai_tunnel_map_list_t   tunnelmap
 sai_acl_capability_t    aclcapability
+sai_ternary_field_t     ternaryfield
+sai_ip_address_list_t   ipaddrlist
+sai_map_list_t          maplist
 /;
 
 my %VALUE_TYPES_TO_VT = qw/
@@ -263,6 +266,9 @@ sai_vlan_list_t         VLAN_LIST
 sai_qos_map_list_t      QOS_MAP_LIST
 sai_tunnel_map_list_t   TUNNEL_MAP_LIST
 sai_acl_capability_t    ACL_CAPABILITY
+sai_ternary_field_t     TERNARY_FIELD
+sai_ip_address_list_t   IP_ADDR_LIST
+sai_map_list_t          MAP_LIST
 /;
 
 sub ProcessTagType
@@ -2685,7 +2691,7 @@ sub CheckHeadersStyle
         ingressing MCAST netdev AUTONEG decapsulation egressing functionalities
         rv subnet subnets Uninitialize versa VRFs Netdevice netdevs PGs CRC32
         HQOS Wildcard VLANs VLAN2 SerDes FC Wakeup warmboot Inservice PVID PHY
-        /;
+        DTel OAM metadata timestamp watchlist/;
 
     my %exceptions = map { $_ => $_ } @spellExceptions;
 
