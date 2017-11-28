@@ -572,13 +572,9 @@ typedef enum _sai_fdb_entry_bridge_type_t
 typedef struct _sai_ternary_field_t {
     union {
         sai_uint8_t u8;
-        sai_uint16_t u16;
-        sai_uint32_t u32;
     } value;
     union {
         sai_uint8_t u8;
-        sai_uint16_t u16;
-        sai_uint32_t u32;
     } mask;
 } sai_ternary_field_t;
 
