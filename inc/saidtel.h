@@ -405,23 +405,23 @@ typedef struct _sai_dtel_api_t
 {
     sai_create_dtel_queue_report_fn           create_dtel_queue_report;
     sai_remove_dtel_queue_report_fn           remove_dtel_queue_report;
-    sai_get_dtel_queue_report_attribute_fn    get_dtel_queue_report_attribute;
     sai_set_dtel_queue_report_attribute_fn    set_dtel_queue_report_attribute;
+    sai_get_dtel_queue_report_attribute_fn    get_dtel_queue_report_attribute;
 
     sai_create_dtel_int_session_fn            create_dtel_int_session;
     sai_remove_dtel_int_session_fn            remove_dtel_int_session;
-    sai_get_dtel_int_session_attribute_fn     get_dtel_int_session_attribute;
     sai_set_dtel_int_session_attribute_fn     set_dtel_int_session_attribute;
+    sai_get_dtel_int_session_attribute_fn     get_dtel_int_session_attribute;
 
     sai_create_dtel_report_session_fn         create_dtel_report_session;
     sai_remove_dtel_report_session_fn         remove_dtel_report_session;
-    sai_get_dtel_report_session_attribute_fn  get_dtel_report_session_attribute;
     sai_set_dtel_report_session_attribute_fn  set_dtel_report_session_attribute;
+    sai_get_dtel_report_session_attribute_fn  get_dtel_report_session_attribute;
 
     sai_create_dtel_event_fn                  create_dtel_event;
     sai_remove_dtel_event_fn                  remove_dtel_event;
-    sai_get_dtel_event_attribute_fn           get_dtel_event_attribute;
     sai_set_dtel_event_attribute_fn           set_dtel_event_attribute;
+    sai_get_dtel_event_attribute_fn           get_dtel_event_attribute;
 
 } sai_dtel_api_t;
 
