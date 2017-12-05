@@ -1907,47 +1907,42 @@ typedef enum _sai_acl_entry_attr_t
     /**
      * @brief DTel flow operation
      *
-     * @type sai_acl_dtel_flow_op_t
+     * @type sai_acl_action_data_t sai_acl_dtel_flow_op_t
      * @flags CREATE_AND_SET
-     * @default SAI_ACL_DTEL_FLOW_OP_NOP
      */
     SAI_ACL_ENTRY_ATTR_ACTION_ACL_DTEL_FLOW_OP,
 
     /**
      * @brief INT session ID
      *
-     * @type sai_object_id_t
+     * @type sai_acl_action_data_t sai_object_id_t
      * @flags CREATE_AND_SET
      * @objects SAI_OBJECT_TYPE_DTEL_INT_SESSION
      * @allownull true
-     * @default SAI_NULL_OBJECT_ID
      */
     SAI_ACL_ENTRY_ATTR_ACTION_DTEL_INT_SESSION,
 
     /**
      * @brief Enable drop report
      *
-     * @type bool
+     * @type sai_acl_action_data_t sai_uint8_t
      * @flags CREATE_AND_SET
-     * @default false
      */
     SAI_ACL_ENTRY_ATTR_ACTION_DTEL_DROP_REPORT_ENABLE,
 
     /**
      * @brief Telemetry flow sample percent within matched flow space
      *
-     * @type sai_uint8_t
+     * @type sai_acl_action_data_t sai_uint8_t
      * @flags CREATE_AND_SET
-     * @default 100
      */
     SAI_ACL_ENTRY_ATTR_ACTION_DTEL_FLOW_SAMPLE_PERCENT,
 
     /**
      * @brief Report every packet for the matched flow
      *
-     * @type bool
+     * @type sai_acl_action_data_t sai_uint8_t
      * @flags CREATE_AND_SET
-     * @default false
      */
     SAI_ACL_ENTRY_ATTR_ACTION_DTEL_REPORT_ALL_PACKETS,
 
