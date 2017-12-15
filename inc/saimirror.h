@@ -256,12 +256,12 @@ typedef enum _sai_mirror_session_attr_t
     SAI_MIRROR_SESSION_ATTR_CUSTOM_RANGE_START = 0x10000000,
 
     /**
-    * @brief ERSPAN Session ID
-    *
-    * @type sai_object_id_t
-    * @flags MANDATORY_ON_CREATE | CREATE_AND_SET
-    * @condition SAI_MIRROR_SESSION_ATTR_TYPE == SAI_MIRROR_SESSION_TYPE_ENHANCED_REMOTE
-    */
+     * @brief ERSPAN Session ID
+     *
+     * @type sai_object_id_t
+     * @flags MANDATORY_ON_CREATE | CREATE_AND_SET
+     * @condition SAI_MIRROR_SESSION_ATTR_TYPE == SAI_MIRROR_SESSION_TYPE_ENHANCED_REMOTE
+     */
     SAI_MIRROR_SESSION_ATTR_CUSTOM_ERSPAN_ID,
 
     /**
