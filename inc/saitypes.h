@@ -218,11 +218,12 @@ typedef enum _sai_object_type_t {
     SAI_OBJECT_TYPE_BRIDGE                   = 57,
     SAI_OBJECT_TYPE_BRIDGE_PORT              = 58,
     SAI_OBJECT_TYPE_TUNNEL_MAP_ENTRY         = 59,
-    SAI_OBJECT_TYPE_DTEL_QUEUE_REPORT        = 60,
-    SAI_OBJECT_TYPE_DTEL_INT_SESSION         = 61,
-    SAI_OBJECT_TYPE_DTEL_REPORT_SESSION      = 62,
-    SAI_OBJECT_TYPE_DTEL_EVENT               = 63,
-    SAI_OBJECT_TYPE_MAX                      = 64,
+    SAI_OBJECT_TYPE_DTEL                     = 60, /**< experimental */
+    SAI_OBJECT_TYPE_DTEL_QUEUE_REPORT        = 61, /**< experimental */
+    SAI_OBJECT_TYPE_DTEL_INT_SESSION         = 62, /**< experimental */
+    SAI_OBJECT_TYPE_DTEL_REPORT_SESSION      = 63, /**< experimental */
+    SAI_OBJECT_TYPE_DTEL_EVENT               = 64, /**< experimental */
+    SAI_OBJECT_TYPE_MAX                      = 65,
 } sai_object_type_t;
 
 typedef struct _sai_u8_list_t {
@@ -379,6 +380,7 @@ typedef struct _sai_acl_action_data_t
      * @brief Action parameter
      */
     union {
+        bool booldata;
         sai_uint8_t u8;
         sai_int8_t s8;
         sai_uint16_t u16;
@@ -567,18 +569,6 @@ typedef enum _sai_fdb_entry_bridge_type_t
 } sai_fdb_entry_bridge_type_t;
 
 /**
- * @brief Ternary field data.
- */
-typedef struct _sai_ternary_field_t {
-    union {
-        sai_uint8_t u8;
-    } value;
-    union {
-        sai_uint8_t u8;
-    } mask;
-} sai_ternary_field_t;
-
-/**
  * @brief Data Type
  *
  * To use enum values as attribute value is sai_int32_t s32
@@ -614,11 +604,10 @@ typedef union {
     sai_vlan_list_t vlanlist;
     sai_qos_map_list_t qosmap;
     sai_tunnel_map_list_t tunnelmap;
-    sai_ip_address_list_t ipaddrlist;
     sai_acl_field_data_t aclfield;
     sai_acl_action_data_t aclaction;
     sai_acl_capability_t aclcapability;
-    sai_ternary_field_t ternaryfield;
+    sai_ip_address_list_t ipaddrlist;
 
 } sai_attribute_value_t;
 
