@@ -1453,7 +1453,6 @@ typedef enum _sai_acl_entry_attr_t
      */
     SAI_ACL_ENTRY_ATTR_FIELD_PACKET_VLAN,
 
-
     /**
      * @brief Tunnel VNI
      *

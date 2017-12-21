@@ -540,6 +540,7 @@ void check_attr_object_type_provided(
         case SAI_ATTR_VALUE_TYPE_QOS_MAP_LIST:
         case SAI_ATTR_VALUE_TYPE_TUNNEL_MAP_LIST:
         case SAI_ATTR_VALUE_TYPE_ACL_CAPABILITY:
+        case SAI_ATTR_VALUE_TYPE_IP_ADDRESS_LIST:
 
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8:
@@ -553,6 +554,7 @@ void check_attr_object_type_provided(
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_IPV6:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8_LIST:
 
+        case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -749,6 +751,7 @@ void check_attr_default_required(
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_IPV6:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_OBJECT_ID:
 
+        case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -779,6 +782,7 @@ void check_attr_default_required(
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_OBJECT_LIST:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_OBJECT_LIST:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8_LIST:
+        case SAI_ATTR_VALUE_TYPE_IP_ADDRESS_LIST:
 
             if (md->defaultvaluetype == SAI_DEFAULT_VALUE_TYPE_EMPTY_LIST)
             {
@@ -955,6 +959,7 @@ void check_attr_default_value_type(
                 case SAI_ATTR_VALUE_TYPE_OBJECT_LIST:
                 case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_OBJECT_LIST:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_OBJECT_LIST:
+                case SAI_ATTR_VALUE_TYPE_IP_ADDRESS_LIST:
                     break;
 
                 default:
@@ -1307,7 +1312,7 @@ void check_attr_validonly(
                 (md->attrid == SAI_MIRROR_SESSION_ATTR_VLAN_TPID || md->attrid == SAI_MIRROR_SESSION_ATTR_VLAN_ID ||
                 md->attrid == SAI_MIRROR_SESSION_ATTR_VLAN_PRI || md->attrid == SAI_MIRROR_SESSION_ATTR_VLAN_CFI))
             {
-                /* Vlan header attributes are depending on VLAN_HEADER_VALID which is 
+                /* Vlan header attributes are depending on VLAN_HEADER_VALID which is
                  * also valid only for ERSPAN. */
             }
             else
@@ -1595,6 +1600,7 @@ void check_attr_acl_fields(
 
             break;
 
+        case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -1652,6 +1658,7 @@ void check_attr_acl_fields(
         {
             switch (md->attrvaluetype)
             {
+                case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:

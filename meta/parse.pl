@@ -266,8 +266,7 @@ sai_vlan_list_t         VLAN_LIST
 sai_qos_map_list_t      QOS_MAP_LIST
 sai_tunnel_map_list_t   TUNNEL_MAP_LIST
 sai_acl_capability_t    ACL_CAPABILITY
-sai_ternary_field_t     TERNARY_FIELD
-sai_ip_address_list_t   IP_ADDR_LIST
+sai_ip_address_list_t   IP_ADDRESS_LIST
 sai_map_list_t          MAP_LIST
 /;
 
@@ -840,9 +839,11 @@ sub ProcessType
         return "${prefix}_INT32";
     }
 
-    if ($type =~ /^sai_acl_action_data_t (sai_\w+_t)$/)
+    if ($type =~ /^sai_acl_action_data_t (bool|sai_\w+_t)$/)
     {
         my $prefix = "SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA";
+
+        return "${prefix}_BOOL" if $1 eq "bool";
 
         return "${prefix}_$ACL_ACTION_TYPES_TO_VT{$1}" if defined $ACL_ACTION_TYPES_TO_VT{$1};
 

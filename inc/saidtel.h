@@ -146,7 +146,6 @@ typedef enum _sai_dtel_attr_t
      *
      * @type sai_acl_field_data_t sai_uint8_t
      * @flags CREATE_AND_SET
-     * @default disabled
      */
     SAI_DTEL_ATTR_INT_L4_DSCP,
 
