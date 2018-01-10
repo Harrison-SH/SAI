@@ -233,6 +233,9 @@ sai_qos_map_list_t      qosmap
 sai_map_list_t          maplist
 sai_tunnel_map_list_t   tunnelmap
 sai_acl_capability_t    aclcapability
+sai_ternary_field_t     ternaryfield
+sai_ip_address_list_t   ipaddrlist
+sai_map_list_t          maplist
 /;
 
 my %VALUE_TYPES_TO_VT = qw/
@@ -265,6 +268,8 @@ sai_qos_map_list_t      QOS_MAP_LIST
 sai_map_list_t          MAP_LIST
 sai_tunnel_map_list_t   TUNNEL_MAP_LIST
 sai_acl_capability_t    ACL_CAPABILITY
+sai_ip_address_list_t   IP_ADDRESS_LIST
+sai_map_list_t          MAP_LIST
 /;
 
 sub ProcessTagType
@@ -836,9 +841,11 @@ sub ProcessType
         return "${prefix}_INT32";
     }
 
-    if ($type =~ /^sai_acl_action_data_t (sai_\w+_t)$/)
+    if ($type =~ /^sai_acl_action_data_t (bool|sai_\w+_t)$/)
     {
         my $prefix = "SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA";
+
+        return "${prefix}_BOOL" if $1 eq "bool";
 
         return "${prefix}_$ACL_ACTION_TYPES_TO_VT{$1}" if defined $ACL_ACTION_TYPES_TO_VT{$1};
 
@@ -2687,7 +2694,7 @@ sub CheckHeadersStyle
         ingressing MCAST netdev AUTONEG decapsulation egressing functionalities
         rv subnet subnets Uninitialize versa VRFs Netdevice netdevs PGs CRC32
         HQOS Wildcard VLANs VLAN2 SerDes FC Wakeup warmboot Inservice PVID PHY
-        /;
+        DTel OAM metadata timestamp watchlist/;
 
     my %exceptions = map { $_ => $_ } @spellExceptions;
 

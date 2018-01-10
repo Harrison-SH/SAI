@@ -541,6 +541,7 @@ void check_attr_object_type_provided(
         case SAI_ATTR_VALUE_TYPE_MAP_LIST:
         case SAI_ATTR_VALUE_TYPE_TUNNEL_MAP_LIST:
         case SAI_ATTR_VALUE_TYPE_ACL_CAPABILITY:
+        case SAI_ATTR_VALUE_TYPE_IP_ADDRESS_LIST:
 
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8:
@@ -554,6 +555,7 @@ void check_attr_object_type_provided(
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_IPV6:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8_LIST:
 
+        case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -750,6 +752,7 @@ void check_attr_default_required(
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_IPV6:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_OBJECT_ID:
 
+        case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -781,6 +784,7 @@ void check_attr_default_required(
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_OBJECT_LIST:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8_LIST:
         case SAI_ATTR_VALUE_TYPE_MAP_LIST:
+        case SAI_ATTR_VALUE_TYPE_IP_ADDRESS_LIST:
 
             if (md->defaultvaluetype == SAI_DEFAULT_VALUE_TYPE_EMPTY_LIST)
             {
@@ -958,6 +962,7 @@ void check_attr_default_value_type(
                 case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_OBJECT_LIST:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_OBJECT_LIST:
                 case SAI_ATTR_VALUE_TYPE_MAP_LIST:
+                case SAI_ATTR_VALUE_TYPE_IP_ADDRESS_LIST:
                     break;
 
                 default:
@@ -1310,7 +1315,7 @@ void check_attr_validonly(
                 (md->attrid == SAI_MIRROR_SESSION_ATTR_VLAN_TPID || md->attrid == SAI_MIRROR_SESSION_ATTR_VLAN_ID ||
                 md->attrid == SAI_MIRROR_SESSION_ATTR_VLAN_PRI || md->attrid == SAI_MIRROR_SESSION_ATTR_VLAN_CFI))
             {
-                /* Vlan header attributes are depending on VLAN_HEADER_VALID which is 
+                /* Vlan header attributes are depending on VLAN_HEADER_VALID which is
                  * also valid only for ERSPAN. */
             }
             else
@@ -1594,10 +1599,18 @@ void check_attr_acl_fields(
                 break;
             }
 
+            if (md->objecttype == SAI_OBJECT_TYPE_DTEL &&
+                    md->attrid == SAI_DTEL_ATTR_INT_L4_DSCP &&
+                    md->attrvaluetype == SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8)
+            {
+                break;
+            }
+
             META_ASSERT_FAIL(md, "acl field may only be set on acl field and udf match");
 
             break;
 
+        case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -1655,6 +1668,7 @@ void check_attr_acl_fields(
         {
             switch (md->attrvaluetype)
             {
+                case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -2074,10 +2088,10 @@ void check_attr_existing_objects(
             break;
 
         case SAI_ATTR_VALUE_TYPE_QOS_MAP_LIST:
-            
+
             /*
              * Allow qos maps list to enable editing qos map values.
-             * Since on switch initialization there are no qos map objects (all switch qos 
+             * Since on switch initialization there are no qos map objects (all switch qos
              * maps attribs are null) this shouldn't be a problem
              */
             break;
@@ -2980,6 +2994,12 @@ void check_api_names()
     CHECK_API(bridge, bridge, SAI_OBJECT_TYPE_BRIDGE);
     CHECK_API(bridge, bridge_port, SAI_OBJECT_TYPE_BRIDGE_PORT);
     CHECK_API(tunnel, tunnel_map_entry, SAI_OBJECT_TYPE_TUNNEL_MAP_ENTRY);
+    CHECK_API(dtel, dtel, SAI_OBJECT_TYPE_DTEL);
+    CHECK_API(dtel, dtel_queue_report, SAI_OBJECT_TYPE_DTEL_QUEUE_REPORT);
+    CHECK_API(dtel, dtel_int_session, SAI_OBJECT_TYPE_DTEL_INT_SESSION);
+    CHECK_API(dtel, dtel_report_session, SAI_OBJECT_TYPE_DTEL_REPORT_SESSION);
+    CHECK_API(dtel, dtel_event, SAI_OBJECT_TYPE_DTEL_EVENT);
+
 
 #define CHECK_ENTRY_API(apiname, entry_name, object_type)\
     {\

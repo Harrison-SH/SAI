@@ -218,7 +218,12 @@ typedef enum _sai_object_type_t {
     SAI_OBJECT_TYPE_BRIDGE                   = 57,
     SAI_OBJECT_TYPE_BRIDGE_PORT              = 58,
     SAI_OBJECT_TYPE_TUNNEL_MAP_ENTRY         = 59,
-    SAI_OBJECT_TYPE_MAX                      = 60,
+    SAI_OBJECT_TYPE_DTEL                     = 60, /**< experimental */
+    SAI_OBJECT_TYPE_DTEL_QUEUE_REPORT        = 61, /**< experimental */
+    SAI_OBJECT_TYPE_DTEL_INT_SESSION         = 62, /**< experimental */
+    SAI_OBJECT_TYPE_DTEL_REPORT_SESSION      = 63, /**< experimental */
+    SAI_OBJECT_TYPE_DTEL_EVENT               = 64, /**< experimental */
+    SAI_OBJECT_TYPE_MAX                      = 65,
 } sai_object_type_t;
 
 typedef struct _sai_u8_list_t {
@@ -293,6 +298,11 @@ typedef struct _sai_ip_address_t {
         sai_ip6_t ip6;
     } addr;
 } sai_ip_address_t;
+
+typedef struct _sai_ip_address_list_t {
+    uint32_t count;
+    sai_ip_address_t *list;
+} sai_ip_address_list_t;
 
 typedef struct _sai_ip_prefix_t {
     sai_ip_addr_family_t addr_family;
@@ -370,6 +380,7 @@ typedef struct _sai_acl_action_data_t
      * @brief Action parameter
      */
     union {
+        bool booldata;
         sai_uint8_t u8;
         sai_int8_t s8;
         sai_uint16_t u16;
@@ -596,6 +607,7 @@ typedef union {
     sai_acl_field_data_t aclfield;
     sai_acl_action_data_t aclaction;
     sai_acl_capability_t aclcapability;
+    sai_ip_address_list_t ipaddrlist;
 
 } sai_attribute_value_t;
 
