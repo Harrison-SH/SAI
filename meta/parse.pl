@@ -69,6 +69,133 @@ my %ACL_ACTION_TYPES_TO_VT = ();
 my %VALUE_TYPES = ();
 my %VALUE_TYPES_TO_VT = ();
 
+my %ACL_FIELD_TYPES = qw/
+bool                booldata
+sai_uint8_t         u8
+sai_int8_t          s8
+sai_uint16_t        u16
+sai_int16_t         s16
+sai_uint32_t        u32
+sai_int32_t         s32
+sai_mac_t           mac
+sai_ip4_t           ip4
+sai_ip6_t           ip6
+sai_object_id_t     oid
+sai_object_list_t   objlist
+sai_uint8_list_t    u8list/;
+
+my %ACL_FIELD_TYPES_TO_VT = qw/
+bool                BOOL
+sai_uint8_t         UINT8
+sai_int8_t          INT8
+sai_uint16_t        UINT16
+sai_int16_t         INT16
+sai_uint32_t        UINT32
+sai_int32_t         INT32
+sai_mac_t           MAC
+sai_ip4_t           IPV4
+sai_ip6_t           IPV6
+sai_object_id_t     OBJECT_ID
+sai_object_list_t   OBJECT_LIST
+sai_uint8_list_t    UINT8_LIST/;
+
+my %ACL_ACTION_TYPES = qw/
+sai_uint8_t           u8
+sai_int8_t            s8
+sai_uint16_t          u16
+sai_int16_t           s16
+sai_uint32_t          u32
+sai_int32_t           s32
+sai_mac_t             mac
+sai_ip4_t             ip4
+sai_ip6_t             ip6
+sai_object_id_t       oid
+sai_object_list_t     objectlist/;
+
+my %ACL_ACTION_TYPES_TO_VT = qw/
+sai_uint8_t           UINT8
+sai_int8_t            INT8
+sai_uint16_t          UINT16
+sai_int16_t           INT16
+sai_uint32_t          UINT32
+sai_int32_t           INT32
+sai_mac_t             MAC
+sai_ip4_t             IPV4
+sai_ip6_t             IPV6
+sai_object_id_t       OBJECT_ID
+sai_object_list_t     OBJECT_LIST/;
+
+my %VALUE_TYPES = qw/
+sai_uint8_t             u8
+sai_int8_t              s8
+sai_uint16_t            u16
+sai_int16_t             s16
+sai_uint32_t            u32
+sai_int32_t             s32
+sai_uint64_t            u64
+sai_int64_t             s64
+sai_pointer_t           ptr
+sai_mac_t               mac
+sai_ip4_t               ip4
+sai_ip6_t               ip6
+sai_ip_address_t        ipaddr
+sai_ip_prefix_t         ipprefix
+sai_object_id_t         oid
+sai_object_list_t       objlist
+sai_u8_list_t           u8list
+sai_s8_list_t           s8list
+sai_u16_list_t          u16list
+sai_s16_list_t          s16list
+sai_u32_list_t          u32list
+sai_s32_list_t          s32list
+sai_u32_range_t         u32range
+sai_s32_range_t         s32range
+sai_vlan_list_t         vlanlist
+sai_acl_field_data_t    aclfield
+sai_acl_action_data_t   aclaction
+sai_qos_map_list_t      qosmap
+sai_map_list_t          maplist
+sai_tunnel_map_list_t   tunnelmap
+sai_acl_capability_t    aclcapability
+sai_ternary_field_t     ternaryfield
+sai_ip_address_list_t   ipaddrlist
+sai_map_list_t          maplist
+/;
+
+my %VALUE_TYPES_TO_VT = qw/
+sai_uint8_t             UINT8
+sai_int8_t              INT8
+sai_uint16_t            UINT16
+sai_int16_t             INT16
+sai_uint32_t            UINT32
+sai_int32_t             INT32
+sai_uint64_t            UINT64
+sai_int64_t             INT64
+sai_pointer_t           POINTER
+sai_mac_t               MAC
+sai_ip4_t               IPV4
+sai_ip6_t               IPV6
+sai_ip_address_t        IP_ADDRESS
+sai_ip_prefix_t         IP_PREFIX
+sai_object_id_t         OBJECT_ID
+sai_object_list_t       OBJECT_LIST
+sai_u8_list_t           UINT8_LIST
+sai_s8_list_t           INT8_LIST
+sai_u16_list_t          UINT16_LIST
+sai_s16_list_t          INT16_LIST
+sai_u32_list_t          UINT32_LIST
+sai_s32_list_t          INT32_LIST
+sai_u32_range_t         UINT32_RANGE
+sai_s32_range_t         INT32_RANGE
+sai_vlan_list_t         VLAN_LIST
+sai_qos_map_list_t      QOS_MAP_LIST
+sai_map_list_t          MAP_LIST
+sai_tunnel_map_list_t   TUNNEL_MAP_LIST
+sai_acl_capability_t    ACL_CAPABILITY
+sai_ip_address_list_t   IP_ADDRESS_LIST
+sai_map_list_t          MAP_LIST
+/;
+
 sub ProcessTagType
 {
     my ($type, $value, $val) = @_;
@@ -1006,9 +1133,11 @@ sub ProcessType
         return "${prefix}_INT32";
     }
 
-    if ($type =~ /^sai_acl_action_data_t (sai_\w+_t)$/)
+    if ($type =~ /^sai_acl_action_data_t (bool|sai_\w+_t)$/)
     {
         my $prefix = "SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA";
+
+        return "${prefix}_BOOL" if $1 eq "bool";
 
         return "${prefix}_$ACL_ACTION_TYPES_TO_VT{$1}" if defined $ACL_ACTION_TYPES_TO_VT{$1};
 

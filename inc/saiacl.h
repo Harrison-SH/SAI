@@ -93,6 +93,26 @@ typedef enum _sai_acl_ip_frag_t
 } sai_acl_ip_frag_t;
 
 /**
+ * @brief DTEL flow operation
+ * @warning experimental
+ */
+typedef enum _sai_acl_dtel_flow_op_t
+{
+    /** No operation (experimental) */
+    SAI_ACL_DTEL_FLOW_OP_NOP,
+
+    /** In-band Network Telemetry (experimental) */
+    SAI_ACL_DTEL_FLOW_OP_INT,
+
+    /** In-band OAM (experimental) */
+    SAI_ACL_DTEL_FLOW_OP_IOAM,
+
+    /** Packet Postcard (experimental) */
+    SAI_ACL_DTEL_FLOW_OP_POSTCARD,
+
+} sai_acl_dtel_flow_op_t;
+
+/**
  * @brief ACL Action Type
  */
 typedef enum _sai_acl_action_type_t
@@ -189,6 +209,21 @@ typedef enum _sai_acl_action_type_t
 
     /** Set Do Not Learn unknown source MAC */
     SAI_ACL_ACTION_TYPE_SET_DO_NOT_LEARN,
+
+    /** Set DTEL flow operation (experimental) */
+    SAI_ACL_ACTION_TYPE_ACL_DTEL_FLOW_OP,
+
+    /** Set DTEL INT session (experimental) */
+    SAI_ACL_ACTION_TYPE_DTEL_INT_SESSION,
+
+    /** Enable DTEL drop report (experimental) */
+    SAI_ACL_ACTION_TYPE_DTEL_DROP_REPORT_ENABLE,
+
+    /** Set DTEL flow sampling (experimental) */
+    SAI_ACL_ACTION_TYPE_DTEL_FLOW_SAMPLE_PERCENT,
+
+    /** Enable DTEL report for all packets without filtering (experimental) */
+    SAI_ACL_ACTION_TYPE_DTEL_REPORT_ALL_PACKETS,
 
 } sai_acl_action_type_t;
 
@@ -916,9 +951,54 @@ typedef enum _sai_acl_table_attr_t
     SAI_ACL_TABLE_ATTR_FIELD_IPV6_NEXT_HEADER,
 
     /**
+     * @brief Tunnel VNI
+     *
+     * @type bool
+     * @flags CREATE_ONLY
+     * @default false
+     */
+    SAI_ACL_TABLE_ATTR_FIELD_TUNNEL_VNI,
+
+    /**
+     * @brief Inner EtherType
+     *
+     * @type bool
+     * @flags CREATE_ONLY
+     * @default false
+     */
+    SAI_ACL_TABLE_ATTR_FIELD_INNER_ETHER_TYPE,
+
+    /**
+     * @brief Inner IP Protocol
+     *
+     * @type bool
+     * @flags CREATE_ONLY
+     * @default false
+     */
+    SAI_ACL_TABLE_ATTR_FIELD_INNER_IP_PROTOCOL,
+
+    /**
+     * @brief Inner L4 Src Port
+     *
+     * @type bool
+     * @flags CREATE_ONLY
+     * @default false
+     */
+    SAI_ACL_TABLE_ATTR_FIELD_INNER_L4_SRC_PORT,
+
+    /**
+     * @brief Inner L4 Dst Port
+     *
+     * @type bool
+     * @flags CREATE_ONLY
+     * @default false
+     */
+    SAI_ACL_TABLE_ATTR_FIELD_INNER_L4_DST_PORT,
+
+    /**
      * @brief End of ACL Table Match Field
      */
-    SAI_ACL_TABLE_ATTR_FIELD_END = SAI_ACL_TABLE_ATTR_FIELD_IPV6_NEXT_HEADER,
+    SAI_ACL_TABLE_ATTR_FIELD_END = SAI_ACL_TABLE_ATTR_FIELD_INNER_L4_DST_PORT,
 
     /**
      * @brief ACL table entries associated with this table.
@@ -1530,9 +1610,52 @@ typedef enum _sai_acl_entry_attr_t
     SAI_ACL_ENTRY_ATTR_FIELD_IPV6_NEXT_HEADER,
 
     /**
+     * @brief Tunnel VNI
+     *
+     * @type sai_acl_field_data_t sai_uint32_t
+     * @flags CREATE_AND_SET
+     */
+    SAI_ACL_ENTRY_ATTR_FIELD_TUNNEL_VNI,
+
+    /**
+     * @brief Inner EtherType
+     *
+     * @type sai_acl_field_data_t sai_uint16_t
+     * @flags CREATE_AND_SET
+     * @isvlan false
+     */
+    SAI_ACL_ENTRY_ATTR_FIELD_INNER_ETHER_TYPE,
+
+    /**
+     * @brief Inner IP Protocol
+     *
+     * @type sai_acl_field_data_t sai_uint8_t
+     * @flags CREATE_AND_SET
+     */
+    SAI_ACL_ENTRY_ATTR_FIELD_INNER_IP_PROTOCOL,
+
+    /**
+     * @brief Inner L4 Src Port
+     *
+     * @type sai_acl_field_data_t sai_uint16_t
+     * @flags CREATE_AND_SET
+     * @isvlan false
+     */
+    SAI_ACL_ENTRY_ATTR_FIELD_INNER_L4_SRC_PORT,
+
+    /**
+     * @brief Inner L4 Dst Port
+     *
+     * @type sai_acl_field_data_t sai_uint16_t
+     * @flags CREATE_AND_SET
+     * @isvlan false
+     */
+    SAI_ACL_ENTRY_ATTR_FIELD_INNER_L4_DST_PORT,
+
+    /**
      * @brief End of Rule Match Fields
      */
-    SAI_ACL_ENTRY_ATTR_FIELD_END = SAI_ACL_ENTRY_ATTR_FIELD_IPV6_NEXT_HEADER,
+    SAI_ACL_ENTRY_ATTR_FIELD_END = SAI_ACL_ENTRY_ATTR_FIELD_INNER_L4_DST_PORT,
 
     /*
      * Actions [sai_acl_action_data_t]
@@ -1849,9 +1972,55 @@ typedef enum _sai_acl_entry_attr_t
     SAI_ACL_ENTRY_ATTR_ACTION_SET_DO_NOT_LEARN,
 
     /**
+     * @brief DTEL flow operation
+     * @warning experimental
+     *
+     * @type sai_acl_action_data_t sai_acl_dtel_flow_op_t
+     * @flags CREATE_AND_SET
+     */
+    SAI_ACL_ENTRY_ATTR_ACTION_ACL_DTEL_FLOW_OP,
+
+    /**
+     * @brief DTEL INT session ID
+     * @warning experimental
+     *
+     * @type sai_acl_action_data_t sai_object_id_t
+     * @flags CREATE_AND_SET
+     * @objects SAI_OBJECT_TYPE_DTEL_INT_SESSION
+     */
+    SAI_ACL_ENTRY_ATTR_ACTION_DTEL_INT_SESSION,
+
+    /**
+     * @brief Enable DTEL drop report
+     * @warning experimental
+     *
+     * @type sai_acl_action_data_t bool
+     * @flags CREATE_AND_SET
+     */
+    SAI_ACL_ENTRY_ATTR_ACTION_DTEL_DROP_REPORT_ENABLE,
+
+    /**
+     * @brief DTEL flow sample percentage
+     * @warning experimental
+     *
+     * @type sai_acl_action_data_t sai_uint8_t
+     * @flags CREATE_AND_SET
+     */
+    SAI_ACL_ENTRY_ATTR_ACTION_DTEL_FLOW_SAMPLE_PERCENT,
+
+    /**
+     * @brief Enable DTEL report for all packets without filtering
+     * @warning experimental
+     *
+     * @type sai_acl_action_data_t bool
+     * @flags CREATE_AND_SET
+     */
+    SAI_ACL_ENTRY_ATTR_ACTION_DTEL_REPORT_ALL_PACKETS,
+
+    /**
      * @brief End of Rule Actions
      */
-    SAI_ACL_ENTRY_ATTR_ACTION_END = SAI_ACL_ENTRY_ATTR_ACTION_SET_DO_NOT_LEARN,
+    SAI_ACL_ENTRY_ATTR_ACTION_END = SAI_ACL_ENTRY_ATTR_ACTION_DTEL_REPORT_ALL_PACKETS,
 
     /**
      * @brief End of ACL Entry attributes

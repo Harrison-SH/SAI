@@ -545,6 +545,7 @@ void check_attr_object_type_provided(
         case SAI_ATTR_VALUE_TYPE_ACL_RESOURCE_LIST:
         case SAI_ATTR_VALUE_TYPE_TLV_LIST:
         case SAI_ATTR_VALUE_TYPE_SEGMENT_LIST:
+        case SAI_ATTR_VALUE_TYPE_IP_ADDRESS_LIST:
 
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8:
@@ -558,6 +559,7 @@ void check_attr_object_type_provided(
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_IPV6:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8_LIST:
 
+        case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -749,6 +751,7 @@ void check_attr_default_required(
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_IPV6:
         case SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_OBJECT_ID:
 
+        case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -799,6 +802,7 @@ void check_attr_default_required(
         case SAI_ATTR_VALUE_TYPE_TLV_LIST:
         case SAI_ATTR_VALUE_TYPE_SEGMENT_LIST:
         case SAI_ATTR_VALUE_TYPE_MAP_LIST:
+        case SAI_ATTR_VALUE_TYPE_IP_ADDRESS_LIST:
 
             if (md->defaultvaluetype == SAI_DEFAULT_VALUE_TYPE_EMPTY_LIST)
             {
@@ -974,6 +978,7 @@ void check_attr_default_value_type(
                 case SAI_ATTR_VALUE_TYPE_TLV_LIST:
                 case SAI_ATTR_VALUE_TYPE_SEGMENT_LIST:
                 case SAI_ATTR_VALUE_TYPE_MAP_LIST:
+                case SAI_ATTR_VALUE_TYPE_IP_ADDRESS_LIST:
                     break;
 
                 default:
@@ -1659,10 +1664,18 @@ void check_attr_acl_fields(
                 break;
             }
 
-            META_MD_ASSERT_FAIL(md, "acl field may only be set on acl field and udf match");
+            if (md->objecttype == SAI_OBJECT_TYPE_DTEL &&
+                    md->attrid == SAI_DTEL_ATTR_INT_L4_DSCP &&
+                    md->attrvaluetype == SAI_ATTR_VALUE_TYPE_ACL_FIELD_DATA_UINT8)
+            {
+                break;
+            }
+
+            META_ASSERT_FAIL(md, "acl field may only be set on acl field and udf match");
 
             break;
 
+        case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
         case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -1720,6 +1733,7 @@ void check_attr_acl_fields(
         {
             switch (md->attrvaluetype)
             {
+                case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_BOOL:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT8:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_INT8:
                 case SAI_ATTR_VALUE_TYPE_ACL_ACTION_DATA_UINT16:
@@ -2163,10 +2177,10 @@ void check_attr_existing_objects(
             break;
 
         case SAI_ATTR_VALUE_TYPE_QOS_MAP_LIST:
-            
+
             /*
              * Allow qos maps list to enable editing qos map values.
-             * Since on switch initialization there are no qos map objects (all switch qos 
+             * Since on switch initialization there are no qos map objects (all switch qos
              * maps attribs are null) this shouldn't be a problem
              */
             break;
@@ -3227,6 +3241,228 @@ typedef sai_status_t(*switch_create_fn)(
         _Out_ sai_object_id_t* switch_id,
         _In_ uint32_t attr_count,
         _In_ const sai_attribute_t *attr_list);
+
+void check_api_names()
+{
+    META_LOG_ENTER();
+
+    /*
+     * Purpose of this check is to find out if all api names correspond to
+     * actual object names and follow convention name and the same signature
+     * except some special objects. Currently this test is performed here
+     * manually, but it could be converted to automatic generated test using
+     * parse.pl script.
+     *
+     * NOTE: Currently all new objects needs to be added here manually.
+     */
+
+    sai_object_type_t checked[SAI_OBJECT_TYPE_MAX];
+
+    memset(checked, 0, SAI_OBJECT_TYPE_MAX * sizeof(sai_object_type_t));
+
+    void *dummy = NULL;
+
+#define CHECK_API(apiname, short_object_type, object_type)\
+    {\
+        sai_ ## apiname ## _api_t apiname ## _api;\
+        checked[(int)object_type] = object_type;\
+        \
+        generic_create_fn create = apiname ## _api.create_ ## short_object_type;\
+        generic_remove_fn remove = apiname ## _api.remove_ ## short_object_type;\
+        generic_set_fn set = apiname ## _api.set_ ## short_object_type ## _attribute;\
+        generic_get_fn get =  apiname ## _api.get_ ## short_object_type ## _attribute;\
+        sai_create_ ## short_object_type ## _fn cr = NULL;\
+        sai_remove_ ## short_object_type ## _fn re = NULL;\
+        sai_set_ ## short_object_type ## _attribute_fn se = NULL;\
+        sai_get_ ## short_object_type ## _attribute_fn ge = NULL;\
+        dummy = &create;\
+        dummy = &remove;\
+        dummy = &set;\
+        dummy = &get;\
+        dummy = &cr;\
+        dummy = &re;\
+        dummy = &se;\
+        dummy = &ge;\
+    }
+
+    /*
+     * Rule here is that SECOND parameter should be exact match for object name
+     * but lower case, for example: CHECK_API(foo, xyz, SAI_OBJECT_TYPE_XYZ);
+     */
+
+    CHECK_API(port, port, SAI_OBJECT_TYPE_PORT);
+    CHECK_API(lag, lag, SAI_OBJECT_TYPE_LAG);
+    CHECK_API(virtual_router, virtual_router, SAI_OBJECT_TYPE_VIRTUAL_ROUTER);
+    CHECK_API(next_hop, next_hop, SAI_OBJECT_TYPE_NEXT_HOP);
+    CHECK_API(router_interface, router_interface, SAI_OBJECT_TYPE_ROUTER_INTERFACE);
+    CHECK_API(acl, acl_table, SAI_OBJECT_TYPE_ACL_TABLE);
+    CHECK_API(acl, acl_entry, SAI_OBJECT_TYPE_ACL_ENTRY);
+    CHECK_API(acl, acl_counter, SAI_OBJECT_TYPE_ACL_COUNTER);
+    CHECK_API(acl, acl_range, SAI_OBJECT_TYPE_ACL_RANGE);
+    CHECK_API(acl, acl_table_group, SAI_OBJECT_TYPE_ACL_TABLE_GROUP);
+    CHECK_API(acl, acl_table_group_member, SAI_OBJECT_TYPE_ACL_TABLE_GROUP_MEMBER);
+    CHECK_API(hostif, hostif, SAI_OBJECT_TYPE_HOSTIF);
+    CHECK_API(mirror, mirror_session, SAI_OBJECT_TYPE_MIRROR_SESSION);
+    CHECK_API(samplepacket, samplepacket, SAI_OBJECT_TYPE_SAMPLEPACKET);
+    CHECK_API(stp, stp, SAI_OBJECT_TYPE_STP);
+    CHECK_API(hostif, hostif_trap_group, SAI_OBJECT_TYPE_HOSTIF_TRAP_GROUP);
+    CHECK_API(policer, policer, SAI_OBJECT_TYPE_POLICER);
+    CHECK_API(wred, wred, SAI_OBJECT_TYPE_WRED);
+    CHECK_API(qos_map, qos_map, SAI_OBJECT_TYPE_QOS_MAP);
+    CHECK_API(queue, queue, SAI_OBJECT_TYPE_QUEUE);
+    CHECK_API(scheduler, scheduler, SAI_OBJECT_TYPE_SCHEDULER);
+    CHECK_API(scheduler_group, scheduler_group, SAI_OBJECT_TYPE_SCHEDULER_GROUP);
+    CHECK_API(buffer, buffer_pool, SAI_OBJECT_TYPE_BUFFER_POOL);
+    CHECK_API(buffer, buffer_profile, SAI_OBJECT_TYPE_BUFFER_PROFILE);
+    CHECK_API(buffer, ingress_priority_group, SAI_OBJECT_TYPE_INGRESS_PRIORITY_GROUP);
+    CHECK_API(lag, lag_member, SAI_OBJECT_TYPE_LAG_MEMBER);
+    CHECK_API(hash, hash, SAI_OBJECT_TYPE_HASH);
+    CHECK_API(udf, udf, SAI_OBJECT_TYPE_UDF);
+    CHECK_API(udf, udf_match, SAI_OBJECT_TYPE_UDF_MATCH);
+    CHECK_API(udf, udf_group, SAI_OBJECT_TYPE_UDF_GROUP);
+    CHECK_API(hostif, hostif_trap, SAI_OBJECT_TYPE_HOSTIF_TRAP);
+    CHECK_API(hostif, hostif_table_entry, SAI_OBJECT_TYPE_HOSTIF_TABLE_ENTRY);
+    CHECK_API(vlan, vlan, SAI_OBJECT_TYPE_VLAN);
+    CHECK_API(vlan, vlan_member, SAI_OBJECT_TYPE_VLAN_MEMBER);
+
+    /*
+     * hostif packet is special since its not a real object but represents
+     * attributes received from host interface.
+     */
+
+    checked[(int)SAI_OBJECT_TYPE_HOSTIF_PACKET] = SAI_OBJECT_TYPE_HOSTIF_PACKET;
+
+    CHECK_API(tunnel, tunnel_map, SAI_OBJECT_TYPE_TUNNEL_MAP);
+    CHECK_API(tunnel, tunnel, SAI_OBJECT_TYPE_TUNNEL);
+    CHECK_API(tunnel, tunnel_term_table_entry, SAI_OBJECT_TYPE_TUNNEL_TERM_TABLE_ENTRY);
+
+    /*
+     * fdb flush is special since its not a real object but represents
+     * attributes that are passed when flushing fdb entries
+     */
+
+    checked[(int)SAI_OBJECT_TYPE_FDB_FLUSH] = SAI_OBJECT_TYPE_FDB_FLUSH;
+
+    CHECK_API(next_hop_group, next_hop_group, SAI_OBJECT_TYPE_NEXT_HOP_GROUP);
+    CHECK_API(next_hop_group, next_hop_group_member, SAI_OBJECT_TYPE_NEXT_HOP_GROUP_MEMBER);
+    CHECK_API(stp, stp_port, SAI_OBJECT_TYPE_STP_PORT);
+    CHECK_API(rpf_group, rpf_group, SAI_OBJECT_TYPE_RPF_GROUP);
+    CHECK_API(rpf_group, rpf_group_member, SAI_OBJECT_TYPE_RPF_GROUP_MEMBER);
+    CHECK_API(l2mc_group, l2mc_group, SAI_OBJECT_TYPE_L2MC_GROUP);
+    CHECK_API(l2mc_group, l2mc_group_member, SAI_OBJECT_TYPE_L2MC_GROUP_MEMBER);
+    CHECK_API(ipmc_group, ipmc_group, SAI_OBJECT_TYPE_IPMC_GROUP);
+    CHECK_API(ipmc_group, ipmc_group_member, SAI_OBJECT_TYPE_IPMC_GROUP_MEMBER);
+    CHECK_API(hostif, hostif_user_defined_trap, SAI_OBJECT_TYPE_HOSTIF_USER_DEFINED_TRAP);
+    CHECK_API(bridge, bridge, SAI_OBJECT_TYPE_BRIDGE);
+    CHECK_API(bridge, bridge_port, SAI_OBJECT_TYPE_BRIDGE_PORT);
+    CHECK_API(tunnel, tunnel_map_entry, SAI_OBJECT_TYPE_TUNNEL_MAP_ENTRY);
+    CHECK_API(dtel, dtel, SAI_OBJECT_TYPE_DTEL);
+    CHECK_API(dtel, dtel_queue_report, SAI_OBJECT_TYPE_DTEL_QUEUE_REPORT);
+    CHECK_API(dtel, dtel_int_session, SAI_OBJECT_TYPE_DTEL_INT_SESSION);
+    CHECK_API(dtel, dtel_report_session, SAI_OBJECT_TYPE_DTEL_REPORT_SESSION);
+    CHECK_API(dtel, dtel_event, SAI_OBJECT_TYPE_DTEL_EVENT);
+
+
+#define CHECK_ENTRY_API(apiname, entry_name, object_type)\
+    {\
+        typedef sai_status_t (*entry_name ## _create_fn)(\
+                _In_ const sai_ ## entry_name ## _t *entry_name,\
+                _In_ uint32_t attr_count,\
+                _In_ const sai_attribute_t *attr_list);\
+        typedef sai_status_t (*entry_name ## _remove_fn)(\
+                _In_ const sai_ ## entry_name ## _t *entry_name);\
+        typedef sai_status_t (*entry_name ## _set_fn)(\
+                _In_ const sai_ ## entry_name ## _t *entry_name,\
+                _In_ const sai_attribute_t *attr);\
+        typedef sai_status_t (*entry_name ## _get_fn)(\
+                _In_ const sai_ ## entry_name ## _t *entry_name,\
+                _In_ uint32_t attr_count,\
+                _Inout_ sai_attribute_t *attr_list);\
+        \
+        sai_ ## apiname ## _api_t apiname ## _api;\
+        checked[(int)object_type] = object_type;\
+        \
+        entry_name ## _create_fn create = apiname ## _api.create_ ## entry_name;\
+        entry_name ## _remove_fn remove = apiname ## _api.remove_ ## entry_name;\
+        entry_name ## _set_fn set = apiname ## _api.set_ ## entry_name ## _attribute;\
+        entry_name ## _get_fn get =  apiname ## _api.get_ ## entry_name ## _attribute;\
+        sai_create_ ## entry_name ## _fn cr = NULL;\
+        sai_remove_ ## entry_name ## _fn re = NULL;\
+        sai_set_ ## entry_name ## _attribute_fn se = NULL;\
+        sai_get_ ## entry_name ## _attribute_fn ge = NULL;\
+        dummy = &create;\
+        dummy = &remove;\
+        dummy = &set;\
+        dummy = &get;\
+        dummy = &cr;\
+        dummy = &re;\
+        dummy = &se;\
+        dummy = &ge;\
+    }
+
+    /*
+     * Those are objects with non object id, so we need to generate api
+     * definitions on the fly.
+     */
+
+    CHECK_ENTRY_API(fdb, fdb_entry, SAI_OBJECT_TYPE_FDB_ENTRY);
+    CHECK_ENTRY_API(neighbor, neighbor_entry, SAI_OBJECT_TYPE_NEIGHBOR_ENTRY);
+    CHECK_ENTRY_API(route, route_entry, SAI_OBJECT_TYPE_ROUTE_ENTRY);
+    CHECK_ENTRY_API(l2mc, l2mc_entry, SAI_OBJECT_TYPE_L2MC_ENTRY);
+    CHECK_ENTRY_API(ipmc, ipmc_entry, SAI_OBJECT_TYPE_IPMC_ENTRY);
+    CHECK_ENTRY_API(mcast_fdb, mcast_fdb_entry, SAI_OBJECT_TYPE_MCAST_FDB_ENTRY);
+
+    {
+        /*
+         * Switch object is special since it create function
+         * don't have switch_id as input parameter
+         */
+
+        checked[(int)SAI_OBJECT_TYPE_SWITCH] = SAI_OBJECT_TYPE_SWITCH;
+
+        sai_switch_api_t switch_api;
+
+        switch_create_fn create = switch_api.create_switch;
+        generic_remove_fn remove = switch_api.remove_switch;
+        generic_set_fn set = switch_api.set_switch_attribute;
+        generic_get_fn get = switch_api.get_switch_attribute;
+        sai_create_switch_fn cr = NULL;
+        sai_remove_switch_fn re = NULL;
+        sai_set_switch_attribute_fn se = NULL;
+        sai_get_switch_attribute_fn ge = NULL;
+        dummy = &create;
+        dummy = &remove;
+        dummy = &set;
+        dummy = &get;
+        dummy = &cr;
+        dummy = &re;
+        dummy = &se;
+        dummy = &ge;
+    }
+
+    if (debug)
+    {
+        /*
+         * to prevent warnings on not used variable
+         */
+        printf("dummy pointer: %p", dummy);
+    }
+
+    int index = SAI_OBJECT_TYPE_NULL;
+
+    /*
+     * check if all objects were processed
+     */
+
+    for (; index < SAI_OBJECT_TYPE_MAX; ++index)
+    {
+        if (checked[index] != (sai_object_type_t)index)
+        {
+            META_FAIL("object %s (%d) was not added to check",
+                    sai_metadata_enum_sai_object_type_t.valuesnames[index], index);
+        }
+    }
+}
 
 void check_single_non_object_id_for_rev_graph(
         _In_ const sai_struct_member_info_t *sm,
