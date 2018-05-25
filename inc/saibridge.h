@@ -236,16 +236,6 @@ typedef enum _sai_bridge_port_attr_t
     SAI_BRIDGE_PORT_ATTR_INGRESS_FILTERING,
 
     /**
-     * @brief Egress filtering (drop frames with unknown VLANs at egress)
-     *
-     * @type bool
-     * @flags CREATE_AND_SET
-     * @default false
-     * @validonly SAI_BRIDGE_PORT_ATTR_TYPE == SAI_BRIDGE_PORT_TYPE_PORT
-     */
-    SAI_BRIDGE_PORT_ATTR_EGRESS_FILTERING,
-
-    /**
      * @brief End of attributes
      */
     SAI_BRIDGE_PORT_ATTR_END,
@@ -683,14 +673,12 @@ typedef struct _sai_bridge_api_t
     sai_set_bridge_attribute_fn         set_bridge_attribute;
     sai_get_bridge_attribute_fn         get_bridge_attribute;
     sai_get_bridge_stats_fn             get_bridge_stats;
-    sai_get_bridge_stats_ext_fn         get_bridge_stats_ext;
     sai_clear_bridge_stats_fn           clear_bridge_stats;
     sai_create_bridge_port_fn           create_bridge_port;
     sai_remove_bridge_port_fn           remove_bridge_port;
     sai_set_bridge_port_attribute_fn    set_bridge_port_attribute;
     sai_get_bridge_port_attribute_fn    get_bridge_port_attribute;
     sai_get_bridge_port_stats_fn        get_bridge_port_stats;
-    sai_get_bridge_port_stats_ext_fn    get_bridge_port_stats_ext;
     sai_clear_bridge_port_stats_fn      clear_bridge_port_stats;
 } sai_bridge_api_t;
 

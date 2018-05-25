@@ -711,14 +711,12 @@ typedef struct _sai_buffer_api_t
     sai_set_buffer_pool_attribute_fn                set_buffer_pool_attribute;
     sai_get_buffer_pool_attribute_fn                get_buffer_pool_attribute;
     sai_get_buffer_pool_stats_fn                    get_buffer_pool_stats;
-    sai_get_buffer_pool_stats_ext_fn                get_buffer_pool_stats_ext;
     sai_clear_buffer_pool_stats_fn                  clear_buffer_pool_stats;
     sai_create_ingress_priority_group_fn            create_ingress_priority_group;
     sai_remove_ingress_priority_group_fn            remove_ingress_priority_group;
     sai_set_ingress_priority_group_attribute_fn     set_ingress_priority_group_attribute;
     sai_get_ingress_priority_group_attribute_fn     get_ingress_priority_group_attribute;
     sai_get_ingress_priority_group_stats_fn         get_ingress_priority_group_stats;
-    sai_get_ingress_priority_group_stats_ext_fn     get_ingress_priority_group_stats_ext;
     sai_clear_ingress_priority_group_stats_fn       clear_ingress_priority_group_stats;
     sai_create_buffer_profile_fn                    create_buffer_profile;
     sai_remove_buffer_profile_fn                    remove_buffer_profile;

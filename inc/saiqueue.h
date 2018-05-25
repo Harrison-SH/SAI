@@ -467,7 +467,6 @@ typedef struct _sai_queue_api_t
     sai_set_queue_attribute_fn   set_queue_attribute;
     sai_get_queue_attribute_fn   get_queue_attribute;
     sai_get_queue_stats_fn       get_queue_stats;
-    sai_get_queue_stats_ext_fn   get_queue_stats_ext;
     sai_clear_queue_stats_fn     clear_queue_stats;
 
 } sai_queue_api_t;

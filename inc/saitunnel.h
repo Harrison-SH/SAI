@@ -943,7 +943,6 @@ typedef struct _sai_tunnel_api_t
     sai_set_tunnel_attribute_fn                  set_tunnel_attribute;
     sai_get_tunnel_attribute_fn                  get_tunnel_attribute;
     sai_get_tunnel_stats_fn                      get_tunnel_stats;
-    sai_get_tunnel_stats_ext_fn                  get_tunnel_stats_ext;
     sai_clear_tunnel_stats_fn                    clear_tunnel_stats;
     sai_create_tunnel_term_table_entry_fn        create_tunnel_term_table_entry;
     sai_remove_tunnel_term_table_entry_fn        remove_tunnel_term_table_entry;
